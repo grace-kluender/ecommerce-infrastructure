@@ -1,0 +1,68 @@
+version: "3.9"
+
+services:
+  database:
+    image: postgres:16
+    container_name: ecommerce-db
+    environment:
+      POSTGRES_DB: ecommerce
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+    ports:
+      - "5432:5432"
+    volumes:
+      - db-data:/var/lib/postgresql/data
+      - ../database/src/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  product-service:
+    build:
+      context: ../product-service
+    container_name: product-service
+    environment:
+      DB_HOST: database
+      DB_NAME: ecommerce
+      DB_USER: postgres
+      DB_PASSWORD: password
+      PORT: 3001
+    ports:
+      - "3001:3001"
+    depends_on:
+      - database
+
+  order-service:
+    build:
+      context: ../order-service
+    container_name: order-service
+    environment:
+      DB_HOST: database
+      DB_NAME: ecommerce
+      DB_USER: postgres
+      DB_PASSWORD: password
+      PRODUCT_SERVICE_URL: http://product-service:3001
+      PORT: 3002
+    ports:
+      - "3002:3002"
+    depends_on:
+      - database
+      - product-service
+
+  frontend:
+    build:
+      context: ../ecommerce-frontend
+    container_name: ecommerce-frontend
+    environment:
+      REACT_APP_PRODUCT_SERVICE_URL: http://product-service:3001
+      REACT_APP_ORDER_SERVICE_URL: http://order-service:3002
+    ports:
+      - "3000:80"
+    depends_on:
+      - product-service
+      - order-service
+
+volumes:
+  db-data:
