@@ -1,5 +1,5 @@
 ## Overview
-This repository contains Terraform configurations used to provision local infrastructure for the e-commerce microservices system.
+This repository contains Terraform configurations used to provision local infrastructure for the e-commerce microservices system. The repository also includes a Docker Compose configuration used to run supporting local development services
 
 The infrastructure includes:
 - Minikube Kubernetes cluster
