@@ -13,3 +13,8 @@ output "jenkins_url" {
 output "kubernetes_namespace" {
   value = module.dev_environment.namespace
 }
+
+output "docker_registry" {
+  description = "Docker registry used for container images"
+  value       = "docker.io/gracekluender"
+}
