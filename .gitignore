@@ -1,0 +1,15 @@
+# Terraform state files
+*.tfstate
+*.tfstate.*
+terraform.tfstate.d/
+terraform-state/
+
+# Terraform crash logs
+crash.log
+
+# Terraform CLI config
+.terraform/
+.terraform.lock.hcl
+
+# Backup state files
+*.backup
