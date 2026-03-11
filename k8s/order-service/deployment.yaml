@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: order-service
-        image: docker.io/gracekluender/order-service:7
+        image: docker.io/gracekluender/order-service:IMAGE_TAG
         ports:
         - containerPort: 3000
         resources:

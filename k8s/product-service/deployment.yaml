@@ -16,7 +16,7 @@ spec:
     spec:
       containers:
       - name: product-service
-        image: docker.io/gracekluender/product-service:5
+        image: docker.io/gracekluender/product-service:IMAGE_TAG
         ports:
         - containerPort: 3000
         resources:

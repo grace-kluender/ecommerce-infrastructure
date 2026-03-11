@@ -1,22 +1,22 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: frontend
+  name: ecommerce-frontend
 spec:
   replicas: 2
   selector:
     matchLabels:
-      app: frontend
+      app: ecommerce-frontend
   strategy:
     type: RollingUpdate
   template:
     metadata:
       labels:
-        app: frontend
+        app: ecommerce-frontend
     spec:
       containers:
-        - name: frontend
-          image: docker.io/gracekluender/ecommerce-frontend:4
+        - name: ecommerce-frontend
+          image: docker.io/gracekluender/ecommerce-frontend:IMAGE_TAG
           ports:
             - containerPort: 3000
           resources:
