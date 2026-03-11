@@ -129,32 +129,43 @@ These outputs can be used by Jenkins pipelines to configure deployments.
 
 ---
 
-# Infrastructure Deployment Workflow
+## Persistent Volume Storage
 
-Typical Terraform workflow:
+The PostgreSQL database uses a PersistentVolume with the `hostPath` storage type.
 
-Initialize Terraform:
+Local storage path used:
 
-```bash
-terraform init
-```
+/data/postgres
 
-Select environment:
+This directory is mounted into the PostgreSQL container at:
 
-```bash
-terraform workspace select dev
-```
+/var/lib/postgresql/data
 
-Plan infrastructure:
+Relevant configuration files:
 
-```bash
-terraform plan -var-file=dev.tfvars
-```
-
-Apply infrastructure:
-
-```bash
-terraform apply -var-file=dev.tfvars
-```
+- k8s/database/pv.yaml
+- k8s/database/pvc.yaml
 
 ---
+
+## Deployment Strategy
+
+This project uses a rolling update deployment strategy for all Kubernetes services.
+
+Rolling updates are managed by Kubernetes Deployments and allow new versions of an application to be released gradually without downtime.
+
+### How Rolling Updates Work
+
+When a deployment is updated (for example when a new Docker image tag is deployed), Kubernetes performs the following steps:
+
+1. A new ReplicaSet is created using the updated configuration
+2. New pods are gradually started using the new image version
+3. Old pods are terminated only after the new pods become healthy
+4. The process continues until all replicas are running the new version
+
+### Configuration
+
+The deployments use the default Kubernetes rolling update strategy:
+
+- `maxUnavailable: 25%` – at most 25% of pods can be unavailable during the update
+- `maxSurge: 25%` – Kubernetes can temporarily create extra pods during the update
